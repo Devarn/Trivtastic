@@ -13,21 +13,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        // UI elements here
+        // Seekbar
+        val seekBar = findViewById<SeekBar>(R.id.seekBar)
+        // Current Number of question text
+        val selectedValueText = findViewById<TextView>(R.id.selectedValue)
+        // The drop down for categories
         val spinnerCategory=findViewById<Spinner>(R.id.spinnerCategories)
+
+        // Read the json text values to populate the spinner
         val categoriesArray=readJsonValuesIntoArray("categories.json")
-
-
         val spinnerArrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             this, android.R.layout.simple_spinner_item,
             categoriesArray
-        ) //selected item will look like a spinner set from XML
-
+        )
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = spinnerArrayAdapter
-        val seekBar = findViewById<SeekBar>(R.id.seekBar)
-        val selectedValueText = findViewById<TextView>(R.id.selectedValue)
 
+        // Display the number of questions from seekbar
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update the TextView with the selected value
@@ -35,11 +38,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Not needed, but you can add custom behavior here if necessary
+
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Not needed, but you can add custom behavior here if necessary
+
             }
         })
 
@@ -50,26 +53,21 @@ class MainActivity : AppCompatActivity() {
         try {
             val categories = applicationContext.assets.open(fileName).bufferedReader().use { it.readText() }
             val jsonObject = JSONObject(categories)
-
-            // Initialize an empty list to store the values
+            // Empty list to store the values
             val values = mutableListOf<String>()
 
-            // Loop through the keys in the JSON object and add their values to the list
+            // Loop the keys and add them to the array
             val keys = jsonObject.keys()
             while (keys.hasNext()) {
                 val key = keys.next()
-                //val value = jsonObject.getString(key)
                 values.add(key)
             }
-
-            // Convert the list to an array of strings and return it
+            // Return as array
             return values.toTypedArray()
         } catch (e: IOException) {
-            // Handle the IOException, or you can simply propagate it
             e.printStackTrace()
             return emptyArray()
         } catch (e: Exception) {
-            // Handle any other exceptions that might occur during JSON parsing
             e.printStackTrace()
             return emptyArray()
         }

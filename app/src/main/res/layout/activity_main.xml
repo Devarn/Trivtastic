@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="#009688"
     tools:context=".MainActivity">
     <Space
         android:layout_width="match_parent"
@@ -59,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_black"
+             android:backgroundTint="#008080"
             android:background="@drawable/rounded_corner"
             android:text="Easy" />
         <Space
