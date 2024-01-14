@@ -9,24 +9,44 @@
     tools:context=".MainActivity">
     <Space
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="25dp"
+        />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:srcCompat="@drawable/trivstastic" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        />
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         />
     <TextView
         android:id="@+id/txtVCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Choose your category"
-        android:textSize="18sp" />
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        />
+        android:fontFamily="@font/roboto_black"
+        android:text="Choose Mode"
+        android:textSize="20sp" />
     <Spinner
+        android:backgroundTint="@color/purple_500"
         android:id="@+id/spinnerCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,22 +58,38 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
-
+            android:fontFamily="@font/roboto_black"
+            android:background="@drawable/rounded_corner"
+            android:text="Easy" />
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            />
         <Button
             android:id="@+id/button7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
-
+            android:fontFamily="@font/roboto_black"
+            android:background="@drawable/rounded_corner"
+            android:text="Medium" />
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            />
         <Button
             android:id="@+id/button8"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:fontFamily="@font/roboto_black"
+            android:background="@drawable/rounded_corner"
+            android:text="Hard" />
     </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        />
 
     <TextView
         android:id="@+id/selectedValue"
@@ -61,24 +97,29 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Number of questions: 0"
-        android:textSize="18sp" />
+        android:fontFamily="@font/roboto_black"
+        android:textSize="20sp" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
+        android:layout_height="30dp"
+        android:max="20"
         android:layout_marginTop="16dp" />
     <Space
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="50dp"
         />
 
     <Button
+        android:fontFamily="@font/roboto_black"
         android:id="@+id/btnStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corner"
         android:text="Start" />
+
+
 
 </LinearLayout>
