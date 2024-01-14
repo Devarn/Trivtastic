@@ -1,2 +1,2 @@
 # Trivtastic
- An andoird app based on Kotlin that for trivia
+ An android app based on Kotlin using open Trivia API.
