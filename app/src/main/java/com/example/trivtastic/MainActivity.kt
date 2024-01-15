@@ -1,7 +1,11 @@
 package com.example.trivtastic
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
+import android.transition.Explode
 import android.view.View
+import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONObject
@@ -16,11 +20,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //------------------------ variables used to construct ze URL-------------------------------
+
+        //------------------------ variables used to construct ze URL here-------------------------------
         var noOfQuestions = 1;
+        // Its set to the default any category
         var category= "Any Category"
         var mode: String
+        //------------------------ variables used to construct ze URL end here-------------------------------
+
         //------------------------ UI elements defined here-------------------------------
+
         // Seekbar
         val seekBar = findViewById<SeekBar>(R.id.seekBar)
         // Current Number of question text
@@ -42,14 +51,14 @@ class MainActivity : AppCompatActivity() {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = spinnerArrayAdapter
 
-
-
         // Display the number of questions from seekbar
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update the TextView with the selected value
+
                 noOfQuestions = progress
-                selectedValueText.text = "Number of questions: $noOfQuestions"
+                if (progress==0){ noOfQuestions=1}
+                "Number of questions: $noOfQuestions".also { selectedValueText.text = it }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -73,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         //------------------------ Setup defined end here-------------------------------
 
         //------------------------ Listeners defined here-------------------------------
+        // Game start button here
         btnStart.setOnClickListener{
 
             val value = getValueFromJson(category)
@@ -85,13 +95,14 @@ class MainActivity : AppCompatActivity() {
                 val m = getQuizQuestions("https://opentdb.com/", apiUrl).toString()
             }
             Toast.makeText(this@MainActivity, "$noOfQuestions $category $value", Toast.LENGTH_SHORT).show()
-
+            val intent = Intent(this@MainActivity, GameActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
         //------------------------ Listeners defined end here-------------------------------
 
     }
-    //------------------------ Functions defined end here-------------------------------
-    fun getValueFromJson(key: String): String? {
+    //------------------------ Functions defined here-------------------------------
+    private fun getValueFromJson(key: String): String? {
         return try {
             val inputStream: InputStream = applicationContext.assets.open("categories.json")
             val categoriesFile= InputStreamReader(inputStream)
@@ -106,7 +117,8 @@ class MainActivity : AppCompatActivity() {
     }
     private fun readJsonValuesIntoArray(fileName: String): Array<String> {
         try {
-            val categories = applicationContext.assets.open(fileName).bufferedReader().use { it.readText() }
+            val categories = applicationContext.assets.open(fileName).bufferedReader().use {
+                it.readText() }
             val jsonObject = JSONObject(categories)
             // Empty list to store the values
             val values = mutableListOf<String>()
@@ -127,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             return emptyArray()
         }
     }
-    suspend fun getQuizQuestions(baseUrl: String, apiEndpoint: String): QuizResponse? {
+    private suspend fun getQuizQuestions(baseUrl: String, apiEndpoint: String): QuizResponse? {
         return withContext(Dispatchers.IO) {
             try {
                 val retrofit = Retrofit.Builder()
