@@ -1,25 +1,26 @@
 package com.example.trivtastic
 
 import android.os.Bundle
-import android.system.Os.read
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONObject
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import kotlinx.coroutines.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //------------------------ variables used to construct ze URL-------------------------------
         var noOfQuestions = 1;
         var category= "Any Category"
-
-        // UI elements here
+        var mode: String
+        //------------------------ UI elements defined here-------------------------------
         // Seekbar
         val seekBar = findViewById<SeekBar>(R.id.seekBar)
         // Current Number of question text
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         val spinnerCategory=findViewById<Spinner>(R.id.spinnerCategories)
         // Start Button
         val btnStart=findViewById<Button>(R.id.btnStart)
+        //------------------------ UI elements defined end here-------------------------------
+
+        //------------------------ Setup defined here-------------------------------
 
         // Read the json text values to populate the spinner
         val categoriesArray=readJsonValuesIntoArray("categories.json")
@@ -66,20 +70,27 @@ class MainActivity : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         }
+        //------------------------ Setup defined end here-------------------------------
 
+        //------------------------ Listeners defined here-------------------------------
         btnStart.setOnClickListener{
 
-            var value = getValueFromJson(category)
-            var apiUrl :String
-            apiUrl = if(value == "any"){
-                "https://opentdb.com/api.php?amount=$noOfQuestions&difficulty=easy&type=multiple"
+            val value = getValueFromJson(category)
+            val apiUrl :String = if(value == "any"){
+                "api.php?amount=$noOfQuestions&difficulty=easy&type=multiple"
             } else{
-                "https://opentdb.com/api.php?amount=$noOfQuestions&category=$value&difficulty=easy&type=multiple"
+                "api.php?amount=$noOfQuestions&category=$value&difficulty=easy&type=multiple"
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val m = getQuizQuestions("https://opentdb.com/", apiUrl).toString()
             }
             Toast.makeText(this@MainActivity, "$noOfQuestions $category $value", Toast.LENGTH_SHORT).show()
+
         }
+        //------------------------ Listeners defined end here-------------------------------
 
     }
+    //------------------------ Functions defined end here-------------------------------
     fun getValueFromJson(key: String): String? {
         return try {
             val inputStream: InputStream = applicationContext.assets.open("categories.json")
@@ -116,10 +127,32 @@ class MainActivity : AppCompatActivity() {
             return emptyArray()
         }
     }
+    suspend fun getQuizQuestions(baseUrl: String, apiEndpoint: String): QuizResponse? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val quizApi = retrofit.create(TrivAPI::class.java)
+                val call = quizApi.getQuiz(apiEndpoint)
+                val response = call.execute()
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    println("Error: ${response.code()}")
+                    null
+                }
+            } catch (e: Exception) {
+                println("Network request failed: ${e.javaClass.simpleName}")
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+    //------------------------ Functions defined end here-------------------------------
+
+    }
 
 
-
-
-
-
-}
