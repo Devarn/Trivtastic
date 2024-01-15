@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Explode
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -91,12 +92,18 @@ class MainActivity : AppCompatActivity() {
             } else{
                 "api.php?amount=$noOfQuestions&category=$value&difficulty=easy&type=multiple"
             }
+            var quizResponse: QuizResponse?
+            quizResponse = null
             CoroutineScope(Dispatchers.Main).launch {
-                val m = getQuizQuestions("https://opentdb.com/", apiUrl).toString()
+                quizResponse = getQuizQuestions("https://opentdb.com/", apiUrl)
+                val intent = Intent(this@MainActivity, GameActivity::class.java)
+                intent.putExtra("quizResponse", quizResponse)
+                Log.d("ffffff", quizResponse.toString())
+             //   startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+                startActivity(intent)
             }
             Toast.makeText(this@MainActivity, "$noOfQuestions $category $value", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this@MainActivity, GameActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+
         }
         //------------------------ Listeners defined end here-------------------------------
 
