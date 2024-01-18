@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         //------------------------ Listeners defined here-------------------------------
         // Game start button here
         btnStart.setOnClickListener{
+            btnStart.isClickable= false
 
             val value = getValueFromJson(category)
             val apiUrl :String = if(value == "any"){
