@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#009688"
+    android:background="#b5f5ee"
     tools:context=".GameActivity" >
 
     <Space
@@ -62,8 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/roboto_black"
-            android:backgroundTint="#008080"
+            android:fontFamily="@font/roboto_light"
             android:background="@drawable/rounded_corner" />
             <Space
                 android:layout_width="25dp"
@@ -106,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/roboto_black"
-                    android:backgroundTint="#008080"
+
                     android:background="@drawable/rounded_corner" />
                 <Space
                     android:layout_width="25dp"

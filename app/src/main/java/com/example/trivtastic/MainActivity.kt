@@ -1,8 +1,10 @@
 package com.example.trivtastic
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.transition.Explode
 import android.util.Log
 import android.view.View
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //------------------------ variables used to construct ze URL here-------------------------------
-        var noOfQuestions = 1;
+        var noOfQuestions = 5;
         // Its set to the default any category
         var category= "Any Category"
         var mode: String
@@ -51,16 +53,16 @@ class MainActivity : AppCompatActivity() {
         )
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = spinnerArrayAdapter
+        selectedValueText.text = " Number of questions: $noOfQuestions"
 
         // Display the number of questions from seekbar
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update the TextView with the selected value
-
                 noOfQuestions = progress
-                if (progress==0){ noOfQuestions=1}
-                "Number of questions: $noOfQuestions".also { selectedValueText.text = it }
-            }
+                "Number of questions: $noOfQuestions".also { selectedValueText.text = it }}
+
+
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
 

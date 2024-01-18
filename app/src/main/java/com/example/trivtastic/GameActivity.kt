@@ -1,11 +1,14 @@
 package com.example.trivtastic
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -32,44 +35,20 @@ class GameActivity : AppCompatActivity() {
         answerBtnList.add(answerThree)
         answerBtnList.add(answerFour)
 
-        answerOne.setOnClickListener {
-            if (answerOne.text == questions[questionNo].correct_answer){
-                Toast.makeText(this@GameActivity, "Correct!", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this@GameActivity, "Wrong", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-        answerTwo.setOnClickListener {
-            if (answerTwo.text == questions[questionNo].correct_answer){
-                Toast.makeText(this@GameActivity, "Correct!", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this@GameActivity, "Wrong", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-        answerThree.setOnClickListener {
-            if (answerThree.text == questions[questionNo].correct_answer){
-                Toast.makeText(this@GameActivity, "Correct!", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this@GameActivity, "Wrong", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-        answerFour.setOnClickListener {
-            if (answerFour.text == questions[questionNo].correct_answer){
-                Toast.makeText(this@GameActivity, "Correct!", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this@GameActivity, "Wrong", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-
-
-
+        answers(answerOne,questions,questionNo, answerBtnList)
+        answers(answerTwo,questions,questionNo, answerBtnList)
+        answers(answerThree,questions,questionNo, answerBtnList)
+        answers(answerFour,questions,questionNo, answerBtnList)
+        
         updateQuestions(answerBtnList,questions[0])
 
         btnNext.setOnClickListener {
+            for (btn in answerBtnList ){
+                btn.isClickable = true
+                runOnUiThread {
+                    btn.setBackgroundResource(R.drawable.rounded_corner) }
+
+            }
             questionNo += 1
             var question = questions[questionNo]
             if (questions.size>=questionNo){
@@ -83,18 +62,35 @@ class GameActivity : AppCompatActivity() {
 
 
         }
+
     }
-    fun updateQuestions(answerBtnList: MutableList<Button>,question: Question){
+    private fun answers(button: Button, questions: List<Question>, questionNo:Int,answerBtnList: MutableList<Button>) {
+        button.setOnClickListener {
+            if (button.text.toString().equals(questions[questionNo].correct_answer, ignoreCase = true)){
+                button.setBackgroundResource(R.drawable.rounded_corner_right_2)
+
+              //Toast.makeText(this@GameActivity, "Correct!", Toast.LENGTH_SHORT).show()
+            }else{
+                button.setBackgroundResource(R.drawable.rounded_corner_wrong)
+                for (btn in answerBtnList){
+                    if (btn.text.toString().equals(questions[questionNo].correct_answer, ignoreCase = true)){
+                        btn.setBackgroundResource(R.drawable.rounded_corner_right_2)
+                    btn.isClickable= false}
+                }
+
+            }}
+
+    }
+
+
+    private fun updateQuestions(answerBtnList: MutableList<Button>, question: Question){
         answerBtnList.shuffle()
         val decodedQuestion = HtmlCompat.fromHtml(question.question, HtmlCompat.FROM_HTML_MODE_LEGACY)
         val questionText = findViewById<TextView>(R.id.txtQuestion)
-        questionText.text= "Question: ${decodedQuestion}"
-
-        answerBtnList[0].text= question.correct_answer
-        answerBtnList[1].text= question.incorrect_answers[0]
-        answerBtnList[2].text= question.incorrect_answers[1]
-        answerBtnList[3].text= question.incorrect_answers[2]
-
-
+        questionText.text= decodedQuestion
+        answerBtnList[0].text= HtmlCompat.fromHtml(question.correct_answer, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        answerBtnList[1].text= HtmlCompat.fromHtml(question.incorrect_answers[0], HtmlCompat.FROM_HTML_MODE_LEGACY)
+        answerBtnList[2].text= HtmlCompat.fromHtml(question.incorrect_answers[1], HtmlCompat.FROM_HTML_MODE_LEGACY)
+        answerBtnList[3].text= HtmlCompat.fromHtml(question.incorrect_answers[2], HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 }
