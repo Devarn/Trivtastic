@@ -1,5 +1,6 @@
 package com.example.trivtastic
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
@@ -51,14 +52,23 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             val nextQuestionNo = questionNo + 1
-            if (questions.size-1!=questionNo){
+            if (questions.size-2==questionNo){
+                runOnUiThread {
+                    btnNext.text = "Finish"
+                }
+                }
+
+                if (questions.size-1!=questionNo){
                 questionNo = nextQuestionNo
                 val question = questions[questionNo]
                 runOnUiThread {
                     updateQuestions(answerBtnList,question)
                 }
             }else{
+                    finish()
                 Toast.makeText(this@GameActivity, "Questions ended", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@GameActivity, MainActivity::class.java)
+                startActivity(intent)
             }
         }
     }
